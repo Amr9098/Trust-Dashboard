@@ -1,0 +1,25 @@
+:host ::ng-deep .ngx-datatable .datatable-body .datatable-scroll {
+     display: inherit;
+   }
+
+
+   .material {
+     height: 550px
+ }
+
+ :host
+  ::ng-deep
+  .ngx-datatable.bootstrap:not(.cell-selection)
+  .datatable-body-row:hover,
+:host
+  ::ng-deep
+  .ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:hover
+  .datatable-row-group {
+    background: linear-gradient(to right, #c9d6ff, #e2e2e2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+
+
+  .light-blue-backdrop {
+    background-color: #5cb3fd !important;
+  }

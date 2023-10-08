@@ -1,0 +1,117 @@
+<div class="main-header">
+  <div class="logo">
+    <img src="./assets/images/logo.png" alt="" />
+  </div>
+
+  <div class="menu-toggle" (click)="toggelSidebar()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <div class="d-flex align-items-center">
+    <!-- Mega menu -->
+  </div>
+
+  <div style="margin: auto"></div>
+
+  <div class="header-part-right">
+    <i
+      fullScreenWindow
+      class="i-Full-Screen header-icon d-none d-sm-inline-block"
+      role="button"
+    ></i>
+
+    <div ngbDropdown [placement]="'bottom-right'">
+      <div class="badge-top-container me-2" >
+        <span class="button__badge"    *ngIf="count!=0&& show" >{{ count }}</span>
+        <i (mouseover)="display()"    (mouseleave)="display()" 
+          ngbDropdownToggle
+          class="i-Bell text-muted header-icon ii"
+          role="button"
+        ></i>
+      </div>
+      <div
+        ngbDropdownMenu
+        class="notification-dropdown rtl-ps-none"
+        perfectScrollbar
+      >
+        <div
+          class="dropdown-item d-flex"
+          *ngFor="let item of notifications"
+          [routerLink]="link"
+        >
+          <div class="notification-icon">
+            <i class=" text-{{ item.status }} me-1" [ngClass]="{
+              'i-Yes':item.status == 'finished',
+              'i-Friendster':item. status == 'pending'
+            }"></i>
+          </div>
+          <div class="notification-details flex-grow-1">
+            <p class="m-0 d-flex align-items-center">
+              <span *ngIf="item.status=='finished'">
+                Request Finished
+              </span>
+
+
+              <span  *ngIf="item.status=='pending'" >
+         Update
+                   </span>
+
+              <span class="flex-grow-1"></span>
+              <span class="text-small text-muted ms-auto">{{
+                item.created_at
+              }}</span>
+            </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      ngbDropdown
+      [placement]="'bottom-right'"
+      class="user mr-5 col align-self-end"
+    >
+      <ngx-avatar
+      id="userDropdown"
+      ngbDropdownToggle
+        name="{{ user$.username }}"
+        src="{{ user$.avatar }}"
+        value="50%"
+        size="70"
+        [round]="false"
+      >
+      </ngx-avatar>
+
+
+      <div
+        ngbDropdownMenu
+        aria-labelledby="userDropdown"
+        class="header-account-dropdown"
+      >
+        <div class="dropdown-header">
+          <i class="i-Lock-User me-1"></i> {{  user$.username }}
+        </div>
+        <!-- <button routerLink="/account" class="dropdown-item hover-3"> Account settings</button> -->
+        <button class="dropdown-item text-danger hover-3" (click)="signout()">Sign out</button>
+      </div>
+    </div>
+  </div>
+</div>

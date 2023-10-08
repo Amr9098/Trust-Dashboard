@@ -1,0 +1,78 @@
+<div
+  class="card o-hidden"
+  [@animate]="{
+    value: '*',
+    params: { y: '120px', opacity: '0', delay: '500ms', duration: '1000ms' }
+  }"
+>
+  <div class="row me-0">
+    <div class="col-md-12">
+      <div class="p-4">
+        <div class="auth-logo text-center mb-4">
+          <img src="assets/images/logo.png" alt="" />
+        </div>
+        <!-- <ngb-alert style="color: whitesmoke; background-color: blueviolet; padding: 10px ; margin: 10px; " type="danger" *ngIf="error" [dismissible]="false">{{
+          error
+        }}</ngb-alert> -->
+
+        <h1 class="mb-3 text-18">Sign In</h1>
+        <form [formGroup]="loginForm" (ngSubmit)="signin()">
+          <div class="form-group">
+            <label for="email"> Email</label>
+            <input
+              id="email"
+              class="form-control form-control-rounded"
+              formControlName="email"
+              type="text"
+              placeholder="Enter Email"
+              [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+            />
+            <div
+            *ngIf="submitted && f.email.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.email.errors.required">
+             email is required
+            </div>
+            <div *ngIf="f.email.errors.email">
+              Invalid email format(تم التعديل)استعادة الترجمة الأصلية
+            </div>
+
+          </div>
+          </div>
+          <div class="form-group col-12 ">
+            <label for="password">Password</label>
+            <input
+
+              id="passwordg"
+              class="form-control form-control-rounded d-inline  "
+              formControlName="password"
+              [type]="passwordTextType ? 'text' : 'password'"
+              placeholder="Enter password"
+              [ngClass]="{
+                'is-invalid': submitted && f.password.errors
+              }"
+            />
+            <div
+            *ngIf="submitted && f.password.errors"
+            class="invalid-feedback"
+          >
+            <span *ngIf="f.password.errors.required"
+              >Password is required</span
+            >
+          </div>
+          </div>
+          <!-- <button class="btn btn-rounded btn-primary w-100 mt-2">Sign In</button> -->
+
+          <btn-loading
+            btnClass="btn-primary btn-rounded w-100 mt-3"
+            [loadingText]="loadingText"
+            [loading]="loading"
+          >
+            Sign In
+          </btn-loading>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

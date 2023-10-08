@@ -1,0 +1,320 @@
+<ng-template #modalBasic let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Rider Request</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+      <div class="form-control-rounded">
+        <label for="picker1" style="font-weight: bold">Select Shift:</label>
+        <select class="form-control my-1" id="selected" formControlName="Shift">
+          <option>6</option>
+          <option selected="selected">8</option>
+          <option>12</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label
+          for="recipient-name"
+          class="col-form-label"
+          style="font-weight: bold"
+          >Branch:</label
+        >
+        <!-- <select
+                class="custom-select mb-3 ms-2 dropdown"
+                (change)="changeCity($event)"
+                formControlName="cityName"
+              >
+              <div class="errors">
+                <span *ngIf="isSubmitted && registrationForm.get('cityName').hasError('required')">Email is Required</span>
+
+              </div>
+                <option value="">Choose branch</option>
+                <option *ngFor="let branch of  branches" [ngValue]="branch.id">
+                  {{ branch.name }}
+                </option>
+              </select> -->
+        <!-- error block -->
+        <input hidden value="2" formControlName="cityName" />
+        <div class="dropdown" style="display: inline">
+          <input type="checkbox" id="dropdown" />
+
+          <label class="dropdown__face" for="dropdown">
+            <div class="dropdown__text">
+              <ng-template ngIf="selectedbranch!"></ng-template>
+              {{ selectedbranch.name }}
+            </div>
+
+            <div class="dropdown__arrow"></div>
+          </label>
+
+          <ul class="dropdown__items">
+            <li *ngFor="let branch of branches">
+              <Button
+                type="button"
+                class="btn b-list"
+                (click)="changebranch(branch)"
+                >{{ branch.name }}</Button
+              >
+            </li>
+          </ul>
+        </div>
+
+        <svg>
+          <filter id="goo">
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="10"
+              result="blur"
+            />
+            <feColorMatrix
+              in="blur"
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              result="goo"
+            />
+            <feBlend in="SourceGraphic" in2="goo" />
+          </filter>
+        </svg>
+
+        <!--
+              <div class="invalid-feedback" *ngIf="isSubmitted && cityName?.invalid">//            <sup>*</sup>Please provide city name
+              </div> -->
+
+        <div class="error-message">
+          <span
+            *ngIf="
+              isSubmitted &&
+              registrationForm.get('cityName').hasError('required')
+            "
+            >branch filed is Required</span
+          >
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="message-text" class="form-label">Rider count :</label>
+
+        <div class="ms-3" style="display: inline">
+          <input
+            type="button"
+            (click)="decrementValue()"
+            value="-"
+            class="btn-danger mx-1"
+          />
+          <input
+            type="text"
+            name="quantity"
+            maxlength="2"
+            max="10"
+            min="1"
+            size="1"
+            id="number"
+            style="text-align: center; font-weight: bold"
+            formControlName="count"
+          />
+          <input
+            type="button"
+            (click)="incrementValue()"
+            value="+"
+            class="btn-success mx-1"
+          />
+        </div>
+
+        <div class="error-message">
+          <span
+            *ngIf="
+              isSubmitted && registrationForm.get('count').hasError('required')
+            "
+            >count filed is Required</span
+          >
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          id="cl"
+          class="btn btn-secondary"
+          style="margin-right: 30px"
+          data-bs-dismiss="modal"
+          (click)="modal.close('Close click')"
+        >
+          Close
+        </button>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div class="">
+  <div class="card mb-3">
+    <div class="card-body d-flex row">
+      <div class="card-title"></div>
+
+      <div class="breadcrumb col-8 ms-1">
+        <h1>Products</h1>
+        <ul>
+          <li><a href="/dashboard/v1">Home</a></li>
+          <li>View All Products</li>
+        </ul>
+      </div>
+
+      <button
+        class="btn btn-outline-primary btn-rounded col-2 mb-2 fw-bold"
+        (click)="open(modalBasic)"
+      >
+        Product
+      </button>
+    </div>
+  </div>
+
+  <ngx-shimmering-loader [style]="style" [elemCount]="1" [isVisible]="loading">
+  </ngx-shimmering-loader>
+
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col-md-4">
+      <div class="form-group">
+        <input
+          id="email"
+          placeholder="Search requests"
+          [formControl]="searchControl"
+          class="form-control form-control-rounded"
+          type="email"
+        />
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card o-hidden">
+        <ngx-datatable
+          style="height: 63vh; box-shadow: none"
+          class="material fullscreen"
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="80"
+          [scrollbarV]="true"
+          [scrollbarH]="true"
+          [rows]="filteredRequests"
+        >
+          <ngx-datatable-column name="#" prop="id" [width]="50">
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Product" prop="name" [width]="150">
+            <ng-template
+              let-row="row"
+              let-name="value"
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div>
+                  <ngx-avatar
+                    class="mr-1"
+                    src="{{ row.image }}"
+                    name="{{ row.name }}"
+                    value="28%"
+                    size="60"
+                    [round]="false"
+                  >
+                  </ngx-avatar>
+                </div>
+                <div class="cell-line-height">
+                  <a class="font-medium-2 d-block"
+                    ><span class="font-weight-bold fs-5"> {{ name }} </span></a
+                  >
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Description"
+            prop="description"
+            [width]="200"
+          >
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div>
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Created At"
+            prop="created_at"
+            [width]="100"
+          >
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div class="item-badges badge badge-pill mt-4 bg-primary">
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            class="hov"
+            name="User"
+            prop="user"
+            [width]="150"
+          >
+            <ng-template
+              let-row="row"
+              let-name="value"
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div>
+                  <ngx-avatar
+                    class="m-1"
+                    name="{{ name.first_name }}"
+                    value="28%"
+                    size="40"
+                    [round]="true"
+                  >
+                  </ngx-avatar>
+                </div>
+                <div class="cell-line-height">
+                  <a class="font-medium-1 d-block"
+                    ><span class="font-weight-bold mr-5"
+                      >{{ name.first_name }} {{ name.last_name }}</span
+                    ></a
+                  >
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Actions" [width]="100" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div>
+                <button
+                  (click)="deleteScadual(row.id)"
+                  class="btn btn-outline-warning btn-rounded "
+                >
+                  <i class="i-Add-UserStar"></i>
+                  Assign
+                </button>
+                <button
+                  (click)="deleteScadual(row.id)"
+                  class="btn btn-outline-danger btn-rounded mr-4"
+                >
+                  <i class="i-Remove"></i>
+                  Delete
+                </button>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>

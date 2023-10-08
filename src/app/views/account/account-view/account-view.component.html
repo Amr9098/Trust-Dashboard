@@ -1,0 +1,221 @@
+<div class="card user-profile o-hidden mb-4">
+  <div
+    class="header-cover"
+    style="background-image: url('assets/images/photo-wide-4.jpg')"
+  ></div>
+  <div class="user-info">
+    <img
+      class="profile-picture avatar-xl mb-1"
+      src="{{ user$.avatar }}"
+      alt=""
+    />
+    <p class="m-0 text-24">{{ user$.name }}</p>
+    <p class="text-muted m-0">{{ user$.roles }}</p>
+  </div>
+  <div class="card-body nav-center">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+      <li ngbNavItem title="About">
+        <a ngbNavLink>About</a>
+        <ng-template ngbNavContent>
+          <div class="row">
+            <div class="col-md-4 col-6">
+              <div class="mb-4">
+                <p class="text-primary mb-1">
+                  <i class="i-Love-User text-16 me-1"></i> Name
+                </p>
+                <span>{{ user$.name }}</span>
+              </div>
+            </div>
+            <div class="col-md-4 col-6">
+              <div class="mb-4">
+                <p class="text-primary mb-1">
+                  <i class="i-MaleFemale text-16 me-1"></i> Email
+                </p>
+                <span>{{ user$.email }}</span>
+              </div>
+            </div>
+            <div class="col-md-4 col-6">
+              <div class="mb-4">
+                <p class="text-primary mb-1">
+                  <i class="i-Firewall text-16 me-1"></i> Profession
+                </p>
+                <span>{{ user$.roles[0] }}</span>
+              </div>
+            </div>
+          </div>
+          <hr />
+        </ng-template>
+      </li>
+      <li ngbNavItem title="Password">
+        <a ngbNavLink>Password</a>
+
+        <ng-template ngbNavContent>
+          <form [formGroup]="Reactive">
+            <div class="row d-flex align-items-center justify-content-center">
+              <div class="col-md-10 col-sm-12 col-lg-8">
+                <h4 class="fw-bold">Change Password</h4>
+                <p class="bg-warning p-1 fw-bold text-white">
+                  When the password is changed, you will be logged out of the
+                  Dashboard
+                </p>
+                <div class="card mb-5">
+                  <div class="card-body">
+                    <div class="d-flex flex-column">
+                      <div class="form-group mb-4">
+                        <label class="fw-bold">Old Password</label>
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              ReactiveFormSubmitted &&
+                              ReactiveForm.old_password.errors
+                          }"
+                          formControlName="old_password"
+                          [type]="passwordTextTypeNew ? 'text' : 'password'"
+                          class="form-control"
+                          placeholder="your Old Password"
+                        />
+                        <div
+                          *ngIf="
+                            ReactiveFormSubmitted &&
+                            ReactiveForm.old_password.errors
+                          "
+                          class="invalid-feedback"
+                        >
+                          <div
+                            *ngIf="ReactiveForm.old_password.errors.required"
+                          >
+                            old password is required
+                          </div>
+                          <div
+                            *ngIf="ReactiveForm.old_password.errors.minlength"
+                          >
+                            old password must be at least 8 characters
+                          </div>
+                          <div
+                            *ngIf="ReactiveForm.old_password.errors.maxlength"
+                          >
+                            old password must be at most 100 characters
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-4">
+                        <label class="fw-bold">New Password</label>
+
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              ReactiveFormSubmitted &&
+                              ReactiveForm.new_password.errors
+                          }"
+                          [type]="passwordTextTypeNew ? 'text' : 'password'"
+                          class="form-control"
+                          placeholder=" your New password"
+                          formControlName="new_password"
+                        />
+                        <div
+                          *ngIf="
+                            ReactiveFormSubmitted &&
+                            ReactiveForm.new_password.errors
+                          "
+                          class="invalid-feedback"
+                        >
+                          <div
+                            *ngIf="ReactiveForm.new_password.errors.required"
+                          >
+                            new password is required
+                          </div>
+                          <div
+                            *ngIf="ReactiveForm.new_password.errors.minlength"
+                          >
+                            new password must be at least 8 characters
+                          </div>
+                          <div
+                            *ngIf="ReactiveForm.new_password.errors.maxlength"
+                          >
+                            new password must be at most 100 characters
+                          </div>
+                          <div *ngIf="ReactiveForm.new_password.errors.strong">
+                            Must contain at least one uppercase and lowercase
+                            letter and at least one special character
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group mb-4">
+                        <label class="fw-bold">Retype New Password</label>
+
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              ReactiveFormSubmitted &&
+                              ReactiveForm.confirm_password.errors
+                          }"
+                          formControlName="confirm_password"
+                          [type]="passwordTextTypeNew ? 'text' : 'password'"
+                          class="form-control"
+                          placeholder="Retype New Password"
+                        />
+                        <div
+                          *ngIf="
+                            ReactiveFormSubmitted &&
+                            ReactiveForm.confirm_password.errors
+                          "
+                          class="invalid-feedback"
+                        >
+                          <div
+                            *ngIf="
+                              ReactiveForm.confirm_password.errors.required
+                            "
+                          >
+                            confirm password is required
+                          </div>
+                          <div
+                            *ngIf="
+                              ReactiveForm.confirm_password.errors.minlength
+                            "
+                          >
+                            confirm password must be at least 8 characters
+                          </div>
+                          <div
+                            *ngIf="
+                              ReactiveForm.confirm_password.errors.maxlength
+                            "
+                          >
+                            confirm password must be at most 100 characters
+                          </div>
+                          <div *ngIf="ReactiveForm.confirm_password.errors">
+                            Password & Confirm Password does not match.
+                          </div>
+                          <div
+                            *ngIf="ReactiveForm.confirm_password.errors.strong"
+                          >
+                            Must contain at least one uppercase and lowercase
+                            letter and at least one special character
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        (click)="togglePasswordTextTypeNew()"
+                        class="btn btn-warning pd-x-20 my-3 fw-bold"
+                      >
+                        {{ passwordViewText }}
+                      </button>
+                      <button
+                        [disabled]="loading"
+                        (click)="ReactiveFormOnSubmit()"
+                        type="submit"
+                        class="btn btn-primary pd-x-20 fw-bold"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+  </div>
+</div>

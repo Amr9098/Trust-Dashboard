@@ -1,0 +1,365 @@
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://npmcdn.com/flatpickr/dist/themes/light.css"
+/>
+
+<div class="">
+  <div class="breadcrumb">
+    <h1>User Data</h1>
+    <ul>
+      <li><a href="/dashboard/v1">Home</a></li>
+      <li>View All Users</li>
+    </ul>
+  </div>
+
+  <ngx-shimmering-loader [style]="style" [elemCount]="1" [isVisible]="loading">
+  </ngx-shimmering-loader>
+
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col-md-4">
+      <div class="form-group">
+        <input
+          autocomplete="off"
+          id="email"
+          placeholder="Search User Data"
+          [formControl]="searchControl"
+          class="form-control form-control-rounded"
+          type="email"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <button
+        type="button"
+        class="btn btn-primary float-left"
+        (click)="open(modalBasic)"
+      >
+        Add New User
+      </button>
+    </div>
+    <div class="col-md-12 mt-2">
+      <div class="card o-hidden">
+        <ngx-datatable
+          style="height: 63vh; box-shadow: none"
+          class="material fullscreen"
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="80"
+          [scrollbarV]="true"
+          [scrollbarH]="true"
+          [rows]="filteredProducts"
+        >
+          <ngx-datatable-column name="User" prop="first_name" [width]="150">
+            <ng-template
+              let-row="row"
+              let-name="value"
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div>
+                  <ngx-avatar
+                    class="m-1"
+                    name="{{ row.first_name }}"
+                    value="28%"
+                    size="40"
+                    [round]="true"
+                  ></ngx-avatar>
+                </div>
+                <div class="cell-line-height">
+                  <a
+                    routerLink="/apps/branch/branch-data/{{ row.id }}"
+                    class="font-medium-2 d-block"
+                  >
+                    <span class="font-weight-bold fs-5"
+                      >{{ name }} {{ row.last_name }}</span
+                    >
+                  </a>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Phone" prop="phone" [width]="100">
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div class="item-badges badge badge-pill mt-4 bg-primary">
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Email" prop="email" [width]="120">
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div class="item-badges badge badge-pill mt-4 bg-primary">
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="verified" prop="verified" [width]="30">
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div
+                class="item-badges badge badge-pill mt-4"
+                [ngClass]="{
+                  'bg-success': status == true,
+                  'bg-warning': status == 'false',
+                  'bg-secondary': status !== 'false'
+                }"
+              >
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Ban" prop="ban" [width]="30">
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div
+                class="item-badges badge badge-pill mt-4"
+                [ngClass]="{
+                  'bg-danger': status == true,
+                  'bg-warning': status == 'false',
+                  'bg-primary': status !== 'false'
+                }"
+              >
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column
+            name="Num of products"
+            prop="number_of_products"
+            [width]="60"
+          >
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div class="item-badges badge mt-4 bg-info">
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Created At"
+            prop="created_at"
+            [width]="50"
+          >
+            <ng-template let-status="value" ngx-datatable-cell-template>
+              <div class="item-badges badge badge-pill mt-4 bg-secondary">
+                {{ status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Profile" [width]="50" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div>
+                <button
+                  (click)="UserProfile(row.id)"
+                  class="btn btn-success mr-4"
+                >
+                  <i class="i-Administrator"></i>
+                  Profile
+                </button>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Actions" [width]="100" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div>
+                <button
+                  (click)="BanUser(row.id, row.first_name, row.ban)"
+                  [ngClass]="
+                    row.ban
+                      ? 'btn btn-outline-warning btn-rounded'
+                      : 'btn btn-outline-info btn-rounded'
+                  "
+                >
+                  <i class="i-Lock-User"></i>
+                  {{ row.ban ? "Unban" : "Ban" }}
+                </button>
+                <button
+                  (click)="deleteUser(row.id, row.first_name)"
+                  class="btn btn-outline-danger btn-rounded mr-4"
+                >
+                  <i class="i-Remove"></i>
+                  Delete
+                </button>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalBasic let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Rider Schedule</h4>
+  </div>
+  <div class="modal-body">
+    <form
+      [formGroup]="ReactiveUserDetailsForm"
+      (ngSubmit)="ReactiveUDFormOnSubmit()"
+    >
+      <div class="form-group position-relative">
+        <label>First Name</label>
+        <div class="form-group mb-4">
+          <input
+            [ngClass]="{
+              'is-invalid':
+                ReactiveUDFormSubmitted && ReactiveForm.first_name.errors
+            }"
+            formControlName="first_name"
+            [type]="text"
+            class="form-control"
+            placeholder="First name "
+          />
+          <div
+            *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.first_name.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="ReactiveUDForm.first_name.errors.required">
+              First name is required
+            </div>
+            <div *ngIf="ReactiveUDForm.first_name.errors.minlength">
+              First name must be at least 3 characters
+            </div>
+            <div *ngIf="ReactiveUDForm.first_name.errors.maxlength">
+              First name must be at most 50 characters
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group position-relative">
+        <label>Last Name</label>
+        <div class="form-group mb-4">
+          <input
+            [ngClass]="{
+              'is-invalid':
+                ReactiveUDFormSubmitted && ReactiveForm.Last_name.errors
+            }"
+            formControlName="last_name"
+            [type]="text"
+            class="form-control"
+            placeholder="Last name "
+          />
+          <div
+            *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.first_name.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="ReactiveUDForm.first_name.errors.required">
+              Last name is required
+            </div>
+            <div *ngIf="ReactiveUDForm.first_name.errors.minlength">
+              Last name must be at least 3 characters
+            </div>
+            <div *ngIf="ReactiveUDForm.first_name.errors.maxlength">
+              Last name must be at most 50 characters
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group position-relative">
+        <label>Phone</label>
+        <div class="form-group mb-4">
+          <input
+            [ngClass]="{
+              'is-invalid':
+                ReactiveUDFormSubmitted && ReactiveForm.Last_name.errors
+            }"
+            formControlName="phone"
+            [type]="text"
+            class="form-control"
+            placeholder="Enter phone number "
+          />
+          <div
+            *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.phone.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="ReactiveUDForm.phone.errors.required">
+              phone is required
+            </div>
+            <div *ngIf="ReactiveUDForm.phone.errors.minlength">
+              phone must be at least 7 characters
+            </div>
+            <div *ngIf="ReactiveUDForm.phone.errors.maxlength">
+              phone must be at most 15 characters
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group position-relative">
+        <label>Email</label>
+        <div class="form-group mb-4">
+          <input
+            [ngClass]="{
+              'is-invalid': ReactiveUDFormSubmitted && ReactiveForm.email.errors
+            }"
+            formControlName="email"
+            [type]="text"
+            class="form-control"
+            placeholder="Enter email "
+          />
+          <div
+            *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.email.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="ReactiveUDForm.email.errors.required">
+              email is required
+            </div>
+            <div *ngIf="ReactiveUDForm.email.errors.email">
+              email must be at least 7 characters
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group position-relative">
+        <label>password</label>
+        <div class="form-group mb-4">
+          <input
+            [ngClass]="{
+              'is-invalid': ReactiveUDFormSubmitted && ReactiveForm.password.errors
+            }"
+            formControlName="password"
+            [type]="text"
+            class="form-control"
+            placeholder="Enter password "
+          />
+          <div
+            *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.password.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="ReactiveUDForm.email.password.required">
+              password is required
+            </div>
+            <div *ngIf="ReactiveUDForm.email.errors.email">
+              password must be at least 8 characters
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      [disabled]="loadingBtn"
+      type="button"
+      class="btn btn-outline-primary btn-rounded"
+      (click)="ReactiveUDFormOnSubmit()"
+    >
+      Add User
+    </button>
+    <button
+      id="myCheck"
+      type="button"
+      class="btn btn-outline-danger btn-rounded"
+      (click)="modal.close('Save click')"
+    >
+      Cancel
+    </button>
+  </div>
+</ng-template>
